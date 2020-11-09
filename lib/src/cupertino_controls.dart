@@ -300,8 +300,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
   }
 
   Widget _buildPosition(Color iconColor) {
-    final position =
-        _latestValue != null ? _latestValue.position : Duration(seconds: 0);
+    final position = _latestValue != null ? _latestValue.position : Duration();
 
     return Padding(
       padding: EdgeInsets.only(right: 12.0),
@@ -318,7 +317,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
   Widget _buildRemaining(Color iconColor) {
     final position = _latestValue != null && _latestValue.duration != null
         ? _latestValue.duration - _latestValue.position
-        : Duration(seconds: 0);
+        : Duration();
 
     return Padding(
       padding: EdgeInsets.only(right: 12.0),
@@ -396,15 +395,17 @@ class _CupertinoControlsState extends State<CupertinoControls> {
       ),
       child: Row(
         children: <Widget>[
-          chewieController.allowFullScreen
-              ? _buildExpandButton(
-                  backgroundColor, iconColor, barHeight, buttonPadding)
-              : Container(),
+          if (chewieController.allowFullScreen)
+            _buildExpandButton(
+                backgroundColor, iconColor, barHeight, buttonPadding)
+          else
+            Container(),
           Expanded(child: Container()),
-          chewieController.allowMuting
-              ? _buildMuteButton(controller, backgroundColor, iconColor,
-                  barHeight, buttonPadding)
-              : Container(),
+          if (chewieController.allowMuting)
+            _buildMuteButton(controller, backgroundColor, iconColor, barHeight,
+                buttonPadding)
+          else
+            Container(),
         ],
       ),
     );
@@ -420,7 +421,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
     });
   }
 
-  Future<Null> _initialize() async {
+  Future<void> _initialize() async {
     controller.addListener(_updateState);
 
     _updateState();
@@ -518,7 +519,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
           });
         } else {
           if (isFinished) {
-            controller.seekTo(Duration(seconds: 0));
+            controller.seekTo(Duration());
           }
           controller.play();
         }
@@ -528,7 +529,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
 
   void _skipBack() {
     _cancelAndRestartTimer();
-    final beginning = Duration(seconds: 0).inMilliseconds;
+    final beginning = Duration().inMilliseconds;
     final skip = (_latestValue.position - Duration(seconds: 15)).inMilliseconds;
     controller.seekTo(Duration(milliseconds: math.max(skip, beginning)));
   }
@@ -541,7 +542,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
   }
 
   void _startHideTimer() {
-    _hideTimer = Timer(const Duration(seconds: 3), () {
+    _hideTimer = Timer(Duration(seconds: 3), () {
       setState(() {
         _hideStuff = true;
       });
@@ -549,7 +550,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
   }
 
   void _updateState() {
-    if (!this.mounted) return;
+    if (!mounted) return;
     setState(() {
       _latestValue = controller.value;
     });
