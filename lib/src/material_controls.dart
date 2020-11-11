@@ -27,7 +27,7 @@ class _MaterialControlsState extends State<MaterialControls> {
   bool _displayTapped = false;
 
   final barHeight = 48.0;
-  final marginSize = 5.0;
+  final marginSize = 10.0;
 
   VideoPlayerController controller;
   ChewieController chewieController;
@@ -127,7 +127,7 @@ class _MaterialControlsState extends State<MaterialControls> {
                 : Container(),
             chewieController.allowFullScreen
                 ? _buildExpandButton()
-                : Container(),
+                : _buildCloseButton(),
           ],
         ),
       ),
@@ -152,6 +152,31 @@ class _MaterialControlsState extends State<MaterialControls> {
               chewieController.isFullScreen
                   ? Icons.fullscreen_exit
                   : Icons.fullscreen,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector _buildCloseButton() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+      child: AnimatedOpacity(
+        opacity: _hideStuff ? 0.0 : 1.0,
+        duration: Duration(milliseconds: 300),
+        child: Container(
+          height: barHeight,
+          margin: EdgeInsets.only(right: 12.0),
+          padding: EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+          ),
+          child: Center(
+            child: Icon(
+              Icons.close,
             ),
           ),
         ),

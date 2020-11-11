@@ -31,7 +31,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
   double _latestVolume;
   bool _hideStuff = true;
   Timer _hideTimer;
-  final marginSize = 5.0;
+  final marginSize = 10.0;
   Timer _expandCollapseTimer;
   Timer _initTimer;
 
@@ -209,6 +209,45 @@ class _CupertinoControlsState extends State<CupertinoControls> {
       ),
     );
   }
+
+  GestureDetector _buildCloseButton(
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+    double buttonPadding,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+      child: AnimatedOpacity(
+        opacity: _hideStuff ? 0.0 : 1.0,
+        duration: Duration(milliseconds: 300),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 10.0),
+            child: Container(
+              height: barHeight,
+              padding: EdgeInsets.only(
+                left: buttonPadding,
+                right: buttonPadding,
+              ),
+              color: backgroundColor,
+              child: Center(
+                child: Icon(
+                      CupertinoIcons.xmark,
+                  color: iconColor,
+                  size: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   Expanded _buildHitArea() {
     return Expanded(
@@ -390,7 +429,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
     return Container(
       height: barHeight,
       margin: EdgeInsets.only(
-        top: marginSize,
+        top: MediaQuery.of(context).padding.top+marginSize,
         right: marginSize,
         left: marginSize,
       ),
@@ -399,7 +438,8 @@ class _CupertinoControlsState extends State<CupertinoControls> {
           chewieController.allowFullScreen
               ? _buildExpandButton(
                   backgroundColor, iconColor, barHeight, buttonPadding)
-              : Container(),
+              : _buildCloseButton(
+                backgroundColor, iconColor, barHeight, buttonPadding),
           Expanded(child: Container()),
           chewieController.allowMuting
               ? _buildMuteButton(controller, backgroundColor, iconColor,
