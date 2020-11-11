@@ -126,7 +126,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
       child: Container(
         color: Colors.transparent,
         alignment: Alignment.bottomCenter,
-        margin: EdgeInsets.all(marginSize),
+        margin: EdgeInsets.only(left: marginSize, right: marginSize, bottom: MediaQuery.of(context).padding.bottom + marginSize, top: 0),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10.0),
           child: BackdropFilter(
